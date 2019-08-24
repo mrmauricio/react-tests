@@ -11,14 +11,19 @@ describe("TechList component", () => {
         // getByText busca um elemento pelo seu texto dentro do componente
         // getByTestId busca um elemento pela sua prop data-testid; isso é
         // usado quando nenhum dos outros metodos get se encaixa na tag buscada
-        const { getByText, getByTestId, debug } = render(<TechList />);
+        // getByLabelText busca um elemento pelo htmlFor de sua Label
+        const { getByText, getByTestId, getByLabelText, debug } = render(
+            <TechList />
+        );
 
-        debug();
-
-        fireEvent.click(getByText("Adicionar"));
-
-        debug();
+        // no onChange no react, passamos o event.target.value como valor,
+        // então é esse que devemos enviar aqui no fireEvent
+        fireEvent.change(getByLabelText("Tech"), {
+            target: { value: "Node.js" }
+        });
+        fireEvent.submit(getByTestId("tech-form"));
 
         expect(getByTestId("tech-list")).toContainElement(getByText("Node.js"));
+        expect(getByLabelText("Tech")).toHaveValue("");
     });
 });
