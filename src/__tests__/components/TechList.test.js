@@ -1,4 +1,36 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { render } from "@testing-library/react";
+
+import TechList from "~/components/TechList";
+
+// a partir desse comando, toda função que for importada do react-redux não
+// será mais, já que agora existe esse mock, que faz as funcionalidades fakes
+jest.mock("react-redux");
+
+describe("TechList component", () => {
+    it("should render tech list", () => {
+        // aqui é implementado o useSelector fake: uma função que recebe uma
+        // função (cb) e então retorna um objeto de techs, com os valores em
+        // questão. assim, é possível simular uma possível resposta real do
+        // redux na aplicação, sem ter nenhum vínculo com o do mundo real
+        useSelector.mockImplementation((cb) =>
+            cb({ techs: ["Node.js", "ReactJS"] })
+        );
+
+        const { getByText, getByTestId } = render(<TechList />);
+
+        // verifica se os valores que retornaram do fake useSelector foram
+        // armazenados na li
+        expect(getByTestId("tech-list")).toContainElement(getByText("Node.js"));
+        expect(getByTestId("tech-list")).toContainElement(getByText("ReactJS"));
+    });
+});
+
+/*
+// first modules:
+
+import React from "react";
 // esse metodo render serve pra criar uma DOM fake para que os testes possam
 // ser feitos, renderiza um componente em questão nesta
 // fireEvent serve para disparar eventos do js
@@ -55,3 +87,5 @@ describe("TechList component", () => {
         expect(getByTestId("tech-list")).toContainElement(getByText("Node.js"));
     });
 });
+
+*/
