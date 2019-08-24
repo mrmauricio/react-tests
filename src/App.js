@@ -1,10 +1,12 @@
-import React from 'react';
-function App() {
-  return (
-    <div className="App">
+import React from "react";
+import TechList from "./components/TechList";
 
-    </div>
-  );
+function App() {
+    return (
+        <div className="App">
+            <TechList />
+        </div>
+    );
 }
 
 export default App;
