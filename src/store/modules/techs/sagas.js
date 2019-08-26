@@ -10,6 +10,6 @@ export function* getTechs() {
 
         yield put(getTechsSuccess(response.data));
     } catch (err) {
-        yield put(getTechsFailure);
+        yield put(getTechsFailure());
     }
 }
