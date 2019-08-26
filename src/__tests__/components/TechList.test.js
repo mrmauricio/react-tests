@@ -1,7 +1,8 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { render } from "@testing-library/react";
+import { useSelector, useDispatch } from "react-redux";
+import { render, fireEvent } from "@testing-library/react";
 
+import { addTech } from "~/store/modules/techs/actions";
 import TechList from "~/components/TechList";
 
 // a partir desse comando, toda função que for importada do react-redux não
@@ -24,6 +25,29 @@ describe("TechList component", () => {
         // armazenados na li
         expect(getByTestId("tech-list")).toContainElement(getByText("Node.js"));
         expect(getByTestId("tech-list")).toContainElement(getByText("ReactJS"));
+    });
+
+    it("should be able to add new tech", () => {
+        const { getByTestId, getByLabelText } = render(<TechList />);
+
+        // cria uma função fake do jest e atribui à const dispatch
+        const fakeDispatch = jest.fn();
+
+        // faz um mock no useDispatch, fazendo com que toda vez que este for
+        // chamado, retorne o parametro fakeDispatch, no caso a função fake
+        // que foi criada ali em cima
+        useDispatch.mockReturnValue(fakeDispatch);
+
+        fireEvent.change(getByLabelText("Tech"), {
+            target: { value: "Node.js" }
+        });
+        fireEvent.submit(getByTestId("tech-form"));
+
+        // então, como no arquivo original o dispatch é chamado com a action
+        // de parâmetro, podemos aqui monitorar a função fakeDispatch, que é
+        // o que o useDispatch retornou, atribuindo à variavel dispatch no
+        // arquivo original
+        expect(fakeDispatch).toHaveBeenCalledWith(addTech("Node.js"));
     });
 });
 
